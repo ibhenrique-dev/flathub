@@ -1,0 +1,31 @@
+id: top.brumy.BrumyPlayer
+runtime: org.gnome.Platform
+runtime-version: '51'
+sdk: org.gnome.Sdk
+command: brumy-player
+finish-args:
+  - --share=network
+  - --share=ipc
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri
+  - --socket=pulseaudio
+  - --env=WEBKIT_GST_ENABLE_HLS_SUPPORT=1
+modules:
+  - name: brumy-player
+    buildsystem: simple
+    build-commands:
+      - mkdir -p /app/share/brumy-player/web
+      - cp -a web/. /app/share/brumy-player/web/
+      - install -Dm755 src/brumy_player.py /app/bin/brumy-player
+      - install -Dm644 src/top.brumy.BrumyPlayer.desktop /app/share/applications/top.brumy.BrumyPlayer.desktop
+      - install -Dm644 src/top.brumy.BrumyPlayer.metainfo.xml /app/share/metainfo/top.brumy.BrumyPlayer.metainfo.xml
+      - install -Dm644 src/top.brumy.BrumyPlayer.png /app/share/icons/hicolor/512x512/apps/top.brumy.BrumyPlayer.png
+      - install -Dm644 LICENSE /app/share/licenses/top.brumy.BrumyPlayer/LICENSE
+      - install -Dm644 src/platform.js /app/share/brumy-player/web/platform.js
+      - cat src/desktop.css >> /app/share/brumy-player/web/revision.css
+      - sed -i 's|\.js"|.js?v=linux-1.1.0"|g; s|\.css"|.css?v=linux-1.1.0"|g' /app/share/brumy-player/web/index.html
+    sources:
+      - type: archive
+        url: https://brumy.top/releases/brumy-player-linux-1.1.0.tar.xz
+        sha256: 9e329c83b2be55fc8cf0ab0da99f13fd2681f4b3d2895b7dbbd3cfc39181cd14
